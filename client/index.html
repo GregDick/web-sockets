@@ -5,9 +5,48 @@
 </head>
 <body>
   <h1>these are the web sockets</h1>
+  <form>
+    <input name="name" placeholder="Joe Shmoe">
+    <input name="text" placeholder="Hey there!">
+    <input type="submit">
+  </form>
+  <ul></ul>
   <script src="/lib/socket.io-client/socket.io.js"></script>
   <script>
+    var form = document.querySelector('form');
+    var nameInput = document.querySelector('input[name="name"]');
+    var textInput = document.querySelector('input[name="text"]');
+    var ul = document.querySelector('ul');
+
+    form.addEventListener('submit', function(){
+      var text = textInput.value;
+      var name = nameInput.value;
+
+      socket.emit('chatMessage', {name : name, text : text});
+      textInput.value = '';
+      event.preventDefault();
+    });
+
     var socket = io();
+
+    socket.on('connect', function(obj){
+      console.log(socket.id);
+    });
+
+    socket.on('chatMessage', function(msg){
+      var li = generateLi(msg);
+      ul.appendChild(li);
+    });
+
+    function generateLi(message){
+      var li = document.createElement('li'),
+      name = message.name,
+      text = message.text;
+
+      var text = document.createTextNode(name + ' : ' + text);
+      li.appendChild(text);
+      return li;
+    }
   </script>
 </body>
 </html>

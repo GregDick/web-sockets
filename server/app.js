@@ -11,5 +11,9 @@ var server = app.listen(3000, function(){
   console.log('server listening on port 3000');
 });
 
-socketio(server);
+var io = socketio(server);
+
+io.on('connection', function(socket){
+  console.log('Client connected:', socket.id);
+});
 
